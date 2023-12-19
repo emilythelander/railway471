@@ -59,7 +59,7 @@ public class HerokuApplication {
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
       stmt.executeUpdate("CREATE TABLE IF NOT EXISTS table_timestamp_and_random_string (tick timestamp, random_string varchar(30))");
-      stmt.executeUpdate("INSERT INTO table_timestamp_and_random_string VALUES (now(), '" + getRandomString() + "')");
+      stmt.executeUpdate("INSERT INTO table_timestamp_and_random_string VALUES (now(), '" + getRandomString("ABCDEFGHIJKLMNOPQRSTUVWXYZ",7) + "')");
       ResultSet rs = stmt.executeQuery("SELECT tick FROM table_timestamp_and_random_string");
 
       ArrayList<String> output = new ArrayList<String>();
@@ -75,18 +75,15 @@ public class HerokuApplication {
     }
   }
 
-  public String getRandomString() {
-    int leftLimit = 97; // letter 'a'
-    int rightLimit = 122; // letter 'z'
-    int targetStringLength = 10;
+  public static String getRandomString(String candidateChars, int length) {
+    StringBuilder sb = new StringBuilder();
     Random random = new Random();
+    for (int i = 0; i < length; i++) {
+      sb.append(candidateChars.charAt(random.nextInt(candidateChars
+              .length())));
+    }
 
-    String generatedString = random.ints(leftLimit, rightLimit + 1)
-            .limit(targetStringLength)
-            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-            .toString();
-
-    return generatedString;
+    return sb.toString();
   }
   @Bean
   public DataSource dataSource() throws SQLException {
