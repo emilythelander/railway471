@@ -61,6 +61,7 @@ public class HerokuApplication {
       stmt.executeUpdate("CREATE TABLE IF NOT EXISTS table_timestamp_and_random_string (tick timestamp, random_string varchar(30))");
       stmt.executeUpdate("INSERT INTO table_timestamp_and_random_string VALUES (now(), '" + getRandomString("ABCDEFGHIJKLMNOPQRSTUVWXYZ",7) + "')");
       ResultSet rs = stmt.executeQuery("SELECT tick, random_string FROM table_timestamp_and_random_string");
+      System.out.println("Emily Thelander");
 
       ArrayList<String> output = new ArrayList<String>();
       while (rs.next()) {
